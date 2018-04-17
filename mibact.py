@@ -1,4 +1,8 @@
 import urllib.request
+import time
+
+workfolder = '/home/alberto/python'
+outfilepath = workfolder + '/mibact_' + str(time.time()) + '.csv'
 
 sparql_endpoint = 'http://dati.beniculturali.it/sparql?default-graph-uri=&'
 
@@ -26,17 +30,26 @@ print(res)
 filenames = []
 while offset < 50372:
     _query = 'query=' + select + where + 'limit+' + str(limit) + '+offset+' + str(offset) + params_csv
-    filename = '/home/alberto/python/prova_at_' + str(offset) + '.csv.part'
+    filename = outfilepath + '.' + str(offset)
     filenames.append(filename)
     local_filename, headers = urllib.request.urlretrieve(sparql_endpoint + _query, filename)
     print(str(offset) + ' fetched')
-    offset += 10000
+    offset += limit
 
-# unisco i file in un unico csv
-with open('/home/alberto/python/prova_at.csv', 'w') as outfile:
-    for fname in filenames:
-        with open(fname) as infile:
-            next(f)
+# recupero la riga di intestazione dal primo file per poterla aggiungere al file di output
+header = ''
+with open(filenames[0], 'r') as f:
+    header = f.readLine()
+
+# unisco i file in un unico csv, saltando la riga di intestazione
+with open(outfilepath, 'a') as outfile:
+    outfile.write(header)
+    for filename in filenames:
+        with open(filename, 'r') as infile:
+            next(infile)
             for line in infile:
                 outfile.write(line)
+
+
+
 
