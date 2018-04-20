@@ -1,9 +1,14 @@
-import urllib.request
+# script per python versione 2
+
+import urllib
+import urllib2
 import time
 import os
 import json
+import sys
 
-workfolder = '/home/alberto/python'
+print(sys.argv)
+workfolder = sys.argv[1]
 outfilepath = workfolder + '/mibact_luoghi_cultura_' + str(int(time.time())) + '.csv'
 print('Querying MIBACT endpoint for "Luoghi della cultura" dataset')
 
@@ -26,8 +31,8 @@ format_csv ='&format=text%2Fcsv&timeout=0'
 
 # interrogazione per recuperare il numero di elementi
 query = 'query=' + select_count + where + format_json
-with urllib.request.urlopen(sparql_endpoint + query) as response:
-    res = response.read()
+response = urllib2.urlopen(sparql_endpoint + query)
+res = response.read()
 res_json = json.loads(res.decode("utf-8"))
 record_count = res_json.get('results').get('bindings')[0].get('c').get('value')
 print('Total number of records: ' + record_count)
@@ -40,7 +45,7 @@ while offset < int(record_count):
     tempfilenames.append(filename)
     print('Fetching {} record with offset {} in {}'.format(str(limit), str(offset), filename))
     #TODO: gestire eccezioni
-    local_filename, headers = urllib.request.urlretrieve(sparql_endpoint + query, filename)
+    local_filename, headers = urllib.urlretrieve(sparql_endpoint + query, filename)
     offset += limit
 
 # recupero la riga di intestazione dal primo file per poterla aggiungere al file finale di output
