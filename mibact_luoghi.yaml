@@ -1,0 +1,27 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+ name: mibact-luoghi-cultura
+ schedule: "* 8 * * *"
+ jobTemplate:
+   spec:
+     template:
+       metadata:
+         name: mibact-luoghi-cultura
+       spec:
+         containers:
+         - name: mibact-luoghi-cultura
+           image: altroisi/python-pysftp:latest
+           command: ["/bin/sh"]
+           args:
+             - "-c"
+             - python /opt/docker/mibact-producer/mibact_luoghi.py /opt/docker/mibact-producer
+           volumeMounts:
+           - name: glusterfsvol
+             mountPath: /opt/docker/mibact-producer
+             subPath: mibact-producer
+         volumes:
+         - name: glusterfsvol
+           persistentVolumeClaim:
+             claimName: gluster-claim
+         restartPolicy: OnFailure

@@ -7,7 +7,6 @@ import os
 import json
 import sys
 
-print(sys.argv)
 workfolder = sys.argv[1]
 outfilepath = workfolder + '/mibact_luoghi_cultura_' + str(int(time.time())) + '.csv'
 print('Querying MIBACT endpoint for "Luoghi della cultura" dataset')

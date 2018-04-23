@@ -3,6 +3,7 @@ import time
 import os
 import json
 import sys
+import pysftp
 
 workfolder = sys.argv[1]
 outfilepath = workfolder + '/mibact_luoghi_cultura_' + str(int(time.time())) + '.csv'
@@ -64,3 +65,15 @@ print('Deleting temp files')
 for filename in tempfilenames:
     os.remove(filename)
 
+# carico su SFTP
+remotepath = '/home/pac_mibact_daf/EDUC/luoghi/mibact_luoghi_della_cultura'
+sftphost = 'daf.teamdigitale.it'
+sftpuser = 'pac_mibact_daf'
+sftppass = 'JJW47tgf'
+cnopts = pysftp.CnOpts(knownhosts=None)
+cnopts.hostkeys = None
+cnopts.compression = True
+with pysftp.Connection(sftphost, username=sftpuser, password=sftppass, cnopts=cnopts) as sftp:
+    with sftp.cd(remotepath):
+        sftp.put(outfilepath)
+print('File uploaded to SFTP in ' + remotepath)
