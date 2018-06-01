@@ -77,3 +77,6 @@ with pysftp.Connection(sftphost, username=sftpuser, password=sftppass, cnopts=cn
     with sftp.cd(remotepath):
         sftp.put(outfilepath)
 print('File uploaded to SFTP in ' + remotepath)
+
+# cancello il file locale
+os.remove(outfilepath)

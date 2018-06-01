@@ -2,7 +2,8 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
  name: mibact-luoghi-cultura
- schedule: "* 8 * * *"
+spec:
+ schedule: "0 9 * * *"
  jobTemplate:
    spec:
      template:
