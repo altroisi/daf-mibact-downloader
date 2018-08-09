@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
- name: mibact-luoghi-downloader
+ name: mibact-eventi-downloader
 spec:
   # ogni giorno alle ore 13
   schedule: "0 11 * * *"
@@ -9,14 +9,14 @@ spec:
     spec:
       template:
         metadata:
-          name: mibact-luoghi
+          name: mibact-eventi
         spec:
           containers:
-          - name: mibact-luoghi-downloader
+          - name: mibact-eventi-downloader
             image: nexus.daf.teamdigitale.it/mibact-downloader:0.0.1
             env:
               - name: dataset
-                value: luoghi
+                value: eventi
               - name: sftp_host
                 value: daf.teamdigitale.it
               - name: sftp_user
@@ -24,7 +24,7 @@ spec:
               - name: sftp_key_file
                 value: ./secret/pac_mibact_sftp-key
               - name: sftp_folder
-                value: EDUC/XXX/mibact_luoghi_cultura/
+                value: EDUC/XXX/mibact_eventi_culturali/
             volumeMounts:
             - name: glusterfsvol
               mountPath: /opt/mibact-downloader/logs
